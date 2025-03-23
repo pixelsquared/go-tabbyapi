@@ -1,6 +1,6 @@
 # Go TabbyAPI Client
 
-A Go client library for interacting with [TabbyAPI](https://github.com/TabbyML/tabby), providing a simple and idiomatic way to use TabbyAPI services from Go applications.
+A Go client library for interacting with [TabbyAPI](https://github.com/theroyallab/tabbyAPI), providing a simple and idiomatic way to use TabbyAPI services from Go applications.
 
 ## Overview
 
