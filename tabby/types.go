@@ -137,14 +137,15 @@ type ChatImageURL struct {
 
 // CompletionRequest matches the TabbyAPI completion request schema
 type CompletionRequest struct {
-	Prompt      interface{} `json:"prompt"` // String or array of strings
+	Prompt      string      `json:"prompt"`
 	MaxTokens   int         `json:"max_tokens,omitempty"`
 	Temperature float64     `json:"temperature,omitempty"`
 	TopP        float64     `json:"top_p,omitempty"`
 	TopK        int         `json:"top_k,omitempty"`
 	Stream      bool        `json:"stream,omitempty"`
-	Stop        interface{} `json:"stop,omitempty"` // String or array of strings
+	Stop        []string    `json:"stop,omitempty"`
 	Model       string      `json:"model,omitempty"`
+	JSONSchema  interface{} `json:"json_schema,omitempty"`
 	// Additional parameters will be added as needed
 }
 
@@ -198,8 +199,9 @@ type ChatCompletionRequest struct {
 	TopP        float64       `json:"top_p,omitempty"`
 	TopK        int           `json:"top_k,omitempty"`
 	Stream      bool          `json:"stream,omitempty"`
-	Stop        interface{}   `json:"stop,omitempty"` // String or array of strings
+	Stop        []string      `json:"stop,omitempty"`
 	Model       string        `json:"model,omitempty"`
+	JSONSchema  interface{}   `json:"json_schema,omitempty"`
 	// Additional parameters will be added as needed
 }
 

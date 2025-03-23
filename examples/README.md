@@ -37,11 +37,13 @@ go run main.go
 
 - **Basic**: Simple text completion with a single prompt
 - **Streaming**: Real-time streaming of generated text
+- **JSON Schema**: Structured completions using JSON schema validation
 
 ### Chat
 
 - **Basic**: Multi-turn conversation with the model
 - **Streaming**: Real-time streaming of chat responses
+- **JSON Schema**: Structured chat responses using JSON schema validation
 
 ### Embeddings
 

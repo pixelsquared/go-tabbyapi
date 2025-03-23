@@ -30,6 +30,18 @@ cd streaming
 go run main.go
 ```
 
+### JSON Schema Completion
+
+Located in the `json_schema` directory, this example shows how to:
+- Create a completion request with a JSON schema constraint
+- Use the schema to enforce structured output format
+- Parse and validate the resulting JSON response
+
+```bash
+cd json_schema
+go run main.go
+```
+
 ## Environment Variables
 
 These examples use the following environment variables:
@@ -48,6 +60,7 @@ The examples demonstrate these common request parameters:
 - `TopK` - Top-k sampling
 - `Stop` - Stop sequences that will end generation
 - `Stream` - Whether to stream the response
+- `JSONSchema` - JSON schema for structured output generation
 
 ## Further Customization
 

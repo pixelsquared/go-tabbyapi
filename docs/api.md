@@ -115,14 +115,15 @@ Generates a completion for the provided prompt.
 **Parameters:**
 - `ctx` - Context for the request
 - `req` - A `*CompletionRequest` object with the following fields:
-  - `Prompt` - String or array of strings (required)
+  - `Prompt` - String (required)
   - `MaxTokens` - Maximum number of tokens to generate (optional)
   - `Temperature` - Controls randomness (0.0-2.0, default varies by model)
   - `TopP` - Top-p sampling (0.0-1.0)
   - `TopK` - Top-k sampling
   - `Stream` - Set to false for non-streaming responses
-  - `Stop` - String or array of strings to stop generation at
+  - `Stop` - Array of strings to stop generation at
   - `Model` - Model identifier (optional)
+  - `JSONSchema` - JSON schema for structured output generation (optional)
 
 **Returns:**
 - `*CompletionResponse` - The completion response containing generated text
@@ -144,6 +145,54 @@ if err != nil {
 }
 
 fmt.Println(resp.Choices[0].Text)
+```
+
+**Example with JSON schema:**
+```go
+// Define a JSON schema for structured output
+personSchema := map[string]interface{}{
+    "type": "object",
+    "properties": map[string]interface{}{
+        "name": map[string]interface{}{
+            "type":        "string",
+            "description": "The person's full name",
+        },
+        "age": map[string]interface{}{
+            "type":        "integer",
+            "description": "The person's age in years",
+            "minimum":     0,
+        },
+        "email": map[string]interface{}{
+            "type":        "string",
+            "description": "The person's email address",
+            "format":      "email",
+        },
+    },
+    "required": []string{"name", "age", "email"},
+}
+
+req := &tabby.CompletionRequest{
+    Prompt:      "Generate information about a software developer named John",
+    MaxTokens:   150,
+    Temperature: 0.7,
+    JSONSchema:  personSchema,
+}
+
+resp, err := client.Completions().Create(ctx, req)
+if err != nil {
+    log.Fatalf("Error: %v", err)
+}
+
+// The response will contain properly formatted JSON that adheres to the schema
+fmt.Println(resp.Choices[0].Text)
+
+// You can parse the JSON directly
+var person struct {
+    Name  string `json:"name"`
+    Age   int    `json:"age"`
+    Email string `json:"email"`
+}
+json.Unmarshal([]byte(resp.Choices[0].Text), &person)
 ```
 
 ##### CreateStream
@@ -205,8 +254,9 @@ Generates a chat completion for the provided conversation.
   - `TopP` - Top-p sampling (0.0-1.0)
   - `TopK` - Top-k sampling
   - `Stream` - Set to false for non-streaming responses
-  - `Stop` - String or array of strings to stop generation at
+  - `Stop` - Array of strings to stop generation at
   - `Model` - Model identifier (optional)
+  - `JSONSchema` - JSON schema for structured output generation (optional)
 
 **Returns:**
 - `*ChatCompletionResponse` - The chat completion response
@@ -235,6 +285,57 @@ if err != nil {
 }
 
 fmt.Println(resp.Choices[0].Message.Content)
+```
+
+**Example with JSON schema:**
+```go
+// Define a JSON schema for a product review
+reviewSchema := map[string]interface{}{
+    "type": "object",
+    "properties": map[string]interface{}{
+        "product_name": map[string]interface{}{
+            "type":        "string",
+            "description": "The name of the product being reviewed",
+        },
+        "rating": map[string]interface{}{
+            "type":        "integer",
+            "description": "The rating from 1 to 5 stars",
+            "minimum":     1,
+            "maximum":     5,
+        },
+        "review_content": map[string]interface{}{
+            "type":        "string",
+            "description": "The detailed review text",
+        },
+    },
+    "required": []string{"product_name", "rating", "review_content"},
+}
+
+req := &tabby.ChatCompletionRequest{
+    Messages: []tabby.ChatMessage{
+        {
+            Role:    tabby.ChatMessageRoleUser,
+            Content: "Write a review for the new laptop I bought yesterday.",
+        },
+    },
+    JSONSchema: reviewSchema,
+}
+
+resp, err := client.Chat().Create(ctx, req)
+if err != nil {
+    log.Fatalf("Error: %v", err)
+}
+
+// Response will contain a properly formatted JSON review
+fmt.Println(resp.Choices[0].Message.Content)
+
+// Parse the JSON directly
+var review struct {
+    ProductName   string `json:"product_name"`
+    Rating        int    `json:"rating"`
+    ReviewContent string `json:"review_content"`
+}
+json.Unmarshal([]byte(resp.Choices[0].Message.Content), &review)
 ```
 
 ##### CreateStream
