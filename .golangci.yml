@@ -1,0 +1,92 @@
+# GolangCI-Lint configuration for go-tabbyapi
+
+run:
+  # Timeout for running all linters
+  timeout: 5m
+  # Include test files
+  tests: true
+  # Allow skipping dirs with .gitignore
+  skip-dirs-use-default: true
+  # Define the Go version to use, same as the minimum supported version in the project
+  go: "1.21"
+
+# Output configuration
+output:
+  # Format: colored-line-number|line-number|json|tab|checkstyle|code-climate
+  format: colored-line-number
+  # Print lines with issue
+  print-issued-lines: true
+  # Print linter name in the issue output
+  print-linter-name: true
+  # Sort output by severity
+  sort-results: true
+
+# Linters to enable/disable
+linters:
+  disable-all: true
+  enable:
+    - errcheck          # Detect unchecked errors
+    - gosimple          # Simplify code
+    - govet             # Reports suspicious constructs
+    - ineffassign       # Detect ineffective assignments
+    - staticcheck       # Go static analysis
+    - unused            # Detect unused code
+    - gofmt             # Checks if code is formatted
+    - goimports         # Manage imports
+    - bodyclose         # Checks if HTTP response bodies are closed
+    - misspell          # Find commonly misspelled words
+    - stylecheck        # Style checks
+    - unconvert         # Remove unnecessary conversions
+    - whitespace        # Check trailing whitespace
+    - revive            # Drop-in replacement for golint
+
+# Linter settings
+linters-settings:
+  errcheck:
+    # Report errors on context.Context cancellation issues
+    check-type-assertions: true
+    check-blank: true
+  govet:
+    check-shadowing: true
+    enable-all: true
+  staticcheck:
+    # Enable all checks
+    go: "1.21"
+  gofmt:
+    simplify: true
+  misspell:
+    locale: US
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+        arguments:
+          - "stutter"
+
+# Issues customization
+issues:
+  # List of regexps of issue texts to exclude
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - errcheck
+        - bodyclose
+    # Exclude generated code
+    - path: \.gen\.go
+      linters:
+        - all
+    # Exclude examples from most checks
+    - path: examples/
+      linters:
+        - unused
+        - errcheck
+        - bodyclose
+  
+  # Maximum issues count per one linter
+  max-issues-per-linter: 50
+  # Maximum count of issues with the same text
+  max-same-issues: 5
+  # Show only new issues:
+  new: false
