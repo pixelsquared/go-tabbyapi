@@ -1037,7 +1037,7 @@ type healthService struct {
 
 func (s *healthService) Check(ctx context.Context) (*HealthCheckResponse, error) {
 	var response HealthCheckResponse
-	err := s.client.Get(ctx, "v1/health", nil, &response)
+	err := s.client.Get(ctx, "health", nil, &response)
 	if err != nil {
 		return nil, fmt.Errorf("failed to check health: %w", err)
 	}
